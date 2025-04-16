@@ -1,0 +1,16 @@
+2025/04/16-16:08:25.946 629c Reusing MANIFEST D:\files\projects\web_tiktok_ZZ\chrome_data\Default\Local Storage\leveldb/MANIFEST-000001
+2025/04/16-16:08:25.951 629c Recovering log #13
+2025/04/16-16:08:25.951 629c Level-0 table #15: started
+2025/04/16-16:08:25.956 629c Level-0 table #15: 18402 bytes OK
+2025/04/16-16:08:25.956 629c Recovering log #15
+2025/04/16-16:08:25.958 629c Reusing old log D:\files\projects\web_tiktok_ZZ\chrome_data\Default\Local Storage\leveldb/000015.log 
+2025/04/16-16:08:25.961 629c Delete type=0 #13
+2025/04/16-16:08:25.961 629c Delete type=2 #16
+2025/04/16-16:08:25.962 3db0 Compacting 4@0 + 0@1 files
+2025/04/16-16:08:25.967 3db0 Generated table #16@0: 41 keys, 66933 bytes
+2025/04/16-16:08:25.968 3db0 Compacted 4@0 + 0@1 files => 66933 bytes
+2025/04/16-16:08:25.969 3db0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/04/16-16:08:25.970 3db0 Delete type=2 #7
+2025/04/16-16:08:25.970 3db0 Delete type=2 #11
+2025/04/16-16:08:25.970 3db0 Delete type=2 #13
+2025/04/16-16:08:25.970 3db0 Delete type=2 #15
