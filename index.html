@@ -26,100 +26,81 @@
     </div>
 
     <div id="info" style="margin-top: 20px; font-size: 20px; font-style: italic;color: #5007d7;"></div>
-
-
-
-    <div id="output" style="font-size: 40px; color: #333; line-height: 1.5;    "></div>
-
-
     
-    <button id="btn" style="font-size: 20px; color: #f6f2f2; background-color: #4caf50; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;width: 100%;">随机刷新</button>
-
-
-
+    <div id="output" style="margin-top: 30px; font-size: 24px; line-height: 1.6;"></div>
+    
+        <button id="refreshButton" style="margin-top: 20px; font-size: 20px; background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+            刷新内容
+        </button>
+    
     <script>
-        // 文件路径
-
-        const menu = document.getElementById('menu');
+        // 获取页面元素
+        const menuSelect = document.getElementById('menu');
         const infoDiv = document.getElementById('info');
-
-        const refresh_btn = document.getElementById('btn');
+        const refreshButton = document.getElementById('refreshButton');
         
-        refresh_btn.addEventListener('click', function() {
-            const selectedValue = menu.value;
-            const selectedOption = menu.options[menu.selectedIndex];  // 获取选中的option元素
-            const selectedText = selectedOption.text;  // 获取option的文本内容
-            const fileUrl = `./头条作者文章库/${selectedText}.json`;
-            loadAndDisplayRandomLines(fileUrl);
-
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'  // 添加平滑滚动效果
-            });
-        });
+        // 为刷新按钮添加点击事件
+        refreshButton.addEventListener('click', loadAndDisplayRandomItems);
         
-        menu.addEventListener('change', function() {
-            const selectedValue = this.value;
-
-            const selectedOption = this.options[this.selectedIndex];  // 获取选中的option元素
-            const selectedText = selectedOption.text;  // 获取option的文本内容
+        // 为下拉菜单添加变更事件
+        menuSelect.addEventListener('change', loadAndDisplayRandomItems);
+        
+        // 加载并显示随机项目的函数
+        async function loadAndDisplayRandomItems() {
+            const selectedValue = menuSelect.value;
+            let fileName = '';
             
-            const  fileUrl = `./stocks/${selectedText}.json`;
-            
-        
-            // 根据选择的值显示不同信息
-            switch(selectedValue) {
-                case '1':
-                    infoDiv.innerHTML = '1,测试用：爬取时间:2025-04-02';
-                    break;
-                case '2':
-                    infoDiv.innerHTML = '2,测试用:2025-04-02';
-                    break;
-                default:
-                    infoDiv.innerHTML = '';
+            if (selectedValue === '1') {
+                fileName = 'stocks/tiffInTech.json';
+                infoDiv.textContent = '正在展示 tiffInTech 的内容';
+            } else if (selectedValue === '2') {
+                fileName = 'stocks/2.json';
+                infoDiv.textContent = '正在展示 2 的内容';
             }
-
-
-            loadAndDisplayRandomLines(fileUrl);
-    });
-
-        
-        // 读取文件并处理
-        async function loadAndDisplayRandomLines(fileUrl) {
+            
             try {
-                // 读取JSON文件
-                const response = await fetch(fileUrl);
+                // 获取JSON文件
+                const response = await fetch(fileName);
+                if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                }
                 const data = await response.json();
-
-                // 将JSON对象转换为数组
+                
+                // 将对象转换为数组以便随机选择
                 const entries = Object.entries(data);
-
+                
                 // 随机选取5个条目
                 const randomEntries = getRandomElements(entries, 5);
-
-                // 创建文字链接并显示
+                
+                // 创建超链接并显示
                 const output = document.getElementById('output');
-                output.innerHTML = randomEntries.map(([url, description]) => 
-                    `<a href="${url}" target="_blank">${description}</a>`
-                ).join('<br><br><br>');
+                output.innerHTML = randomEntries.map(([url, itemData]) => {
+                    // 使用pub_time作为链接文本，如果为null则使用"查看视频"
+                    const linkText = itemData.pub_time || "查看视频";
+                    // 如果有desc，则在链接下方显示描述
+                    const descText = itemData.desc ? `<div style="font-size: 18px; color: #666; margin-top: 5px;">${itemData.desc}</div>` : '';
+                    
+                    return `<div style="margin-bottom: 30px;">
+                        <a href="${url}" target="_blank" style="color: #1DA1F2; font-weight: bold;">${linkText}</a>
+                        ${descText}
+                    </div>`;
+                }).join('');
             } catch (error) {
                 console.error('读取JSON文件失败:', error);
+                output.innerHTML = `<div style="color: red;">加载数据失败: ${error.message}</div>`;
             }
+
+            window.scrollTo(0, 0);
         }
 
         // 随机选取元素的函数
         function getRandomElements(array, count) {
-            const shuffled = array.sort(() => 0.5 - Math.random());
+            const shuffled = [...array].sort(() => 0.5 - Math.random());
             return shuffled.slice(0, count);
         }
         
-       
-
-
-
-
         // 页面加载时调用
-        window.onload = loadAndDisplayRandomLines;
+        window.onload = loadAndDisplayRandomItems;
     </script>
 </body>
 </html>
