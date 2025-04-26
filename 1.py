@@ -19,31 +19,33 @@ with open("tiff-5.txt", "r", encoding="utf-8") as f:
         url = line.strip()
         page.get(url)
 
+
+        # 获取发布时间
+        pub_time = page.ele('xpath://span[@data-e2e="browser-nickname"]//span[3]')
+        print(pub_time)
+        pub_time = pub_time.text if pub_time else None
+        print(pub_time)
+
+
         # 获取描述
-        desc = page.ele('xpath://div[@data-e2e="video-desc"]')
+        desc = page.ele('xpath://div[@data-e2e="browse-video-desc"]')
         print(desc)
         desc_text = desc.text if desc else None
         print(desc_text)
 
 
 
-        # 获取发布时间
-        pub_time_link = page.ele('xpath://a[contains(@class, "css-qvpt8d-StyledAuthorAnchor") and contains(@class, "e1g2yhv81") and contains(@class, "link-a11y-focus")]')
-        print(pub_time_link)
-        pub_time = pub_time_link.text if pub_time_link else None
-        print(pub_time)
-
 
         # 将数据存入字典
         data[url] = {
-            'desc': desc_text,
-            'pub_time': pub_time
+            'pub_time': pub_time,
+            'desc': desc_text
         }
 
 
 
 
-with open("1.json", "a", encoding="utf-8") as f:
+with open("1.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=4)  # 添加indent参数使json文件更易读
 
 

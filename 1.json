@@ -1,22 +1,22 @@
 {
     "https://www.tiktok.com/@tiffintech/video/7493682578617109765": {
-        "desc": null,
-        "pub_time": null
+        "pub_time": "4-16",
+        "desc": "So, why do computers use binary?\n\nHere’s the wild part: binary goes way back. While Leibniz—this guy from the 1600s—made it popular, even ancient Egyptians and Indians had their own version of binary.\n\n#tech #technology #stem #ai"
     },
     "https://www.tiktok.com/@tiffintech/video/7493668129210486022": {
-        "desc": null,
-        "pub_time": null
+        "pub_time": "4-16",
+        "desc": "When you send a message or load a website, your data travels across a global infrastructure, one that most people never see. Over 99% of international internet traffic is carried by submarine fiber-optic cables laid across the ocean floor. These cables transmit data as pulses of light, using total internal reflection to bounce signals down glass strands at nearly the speed of light.\n\nOnce your data reaches land, it's routed through a complex mesh of interconnected networks using protocols like BGP (Border Gateway Protocol), which determines the most efficient path to the destination. Routers act like traffic controllers, making real-time decisions to avoid congestion and outages.\n\nAnd in places where cables can’t reach, think rural areas, ships at sea, or remote islands, satellites and wireless networks take over, using radio frequencies to transmit data with higher latency but broad coverage.\n\nAll of this happens in milliseconds, creating the illusion of instant connectivity!\n\n#tech #technology #stem #coding #ai #developer #techexplained"
     },
     "https://www.tiktok.com/@tiffintech/video/7492542400758418743": {
-        "desc": null,
-        "pub_time": null
+        "pub_time": "4-13",
+        "desc": "Let’s build a machine learning model to make predictions about F1s upcoming Bahrain GP winner! \n\nGitHub: Tiffintech to try out the project yourself! \n\nThis model has three main components:\n1. A RandomForestClassifier enhanced with real-time performance multipliers\n2. Key features including:\n* 2025 Bahrain qualifying results\n* Historical track performance\n* Team and driver-specific factors\n* Weather conditions\n* Current form adjustments\n3. Historical data training with crucial 2025 updates\n\nHow the model works:\n* Combines past race patterns with current form\n* Weighs qualifying against expected race pace\n* Applies team advantages \n* Adjusts for Bahrain-specific racing conditions\n\n#tech #technology #coding #stem #ai"
     },
     "https://www.tiktok.com/@tiffintech/video/7492116303453408517": {
-        "desc": null,
-        "pub_time": null
+        "pub_time": "4-12",
+        "desc": "iOS vs Android … what is really better? Here is a breakdown of some of the pros and cons of each. I’ve heard a lot of people switching to one or the other recently so thought I’d dive into this topic! \n\n#tech #technology #stem"
     },
     "https://www.tiktok.com/@tiffintech/video/7492095929021959479": {
-        "desc": null,
-        "pub_time": null
+        "pub_time": "4-12",
+        "desc": "Every time you shop online, send an email, or even check your bank balance, you're trusting your data to be kept safe. But how exactly is that data protected? \nThe answer: encryption. Let’s break it down.\n\n#tech #techexplained #stem"
     }
 }
