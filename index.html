@@ -177,8 +177,11 @@
                     const desc = info.desc || '无描述';
                     
                     return `<div class="entry">
+                        <p>
                         <a href="${url}" target="_blank">${pubTime}</a>
-                        <p>${desc}</p>
+                        <br>
+                        ${desc}
+                        </p>
                     </div>`;
                 }).join('<br>');
             } catch (error) {
