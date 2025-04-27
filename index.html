@@ -14,6 +14,10 @@
         p{
             font-size: 20px;
         }
+
+        .right{
+            float: right;
+        }
     </style>
 </head>
 <body style="background-color:  #F2F0E9;">
@@ -178,7 +182,8 @@
                     
                     return `<div class="entry">
                         <p>
-                        <a href="${url}" target="_blank">${pubTime}</a>
+                        <a class="left" href="${url}" target="_blank">${pubTime}</a>
+                        <a class="right"  href="${url}" target="_blank">${pubTime}</a>
                         <br>
                         ${desc}
                         </p>
