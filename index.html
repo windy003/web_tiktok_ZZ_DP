@@ -3,250 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>随机展示文本</title>
+    <title>tiktok博主视频随机浏览器</title>
     <link rel="apple-touch-icon" sizes="180x180" href="180x180.png">
     <style>
-        a{
-            color: #4806f0;
-            text-decoration: none;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        p{
-            font-size: 20px;
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
         }
-
-        .right{
-            float: right;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #ff2d55;
+            font-size: 24px;
+        }
+        .file-selector {
+            display: flex;
+            align-items: center;
+        }
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        .refresh-btn {
+            padding: 8px 16px;
+            background-color: #ff2d55;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .refresh-btn:hover {
+            background-color: #ff0044;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .video-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .video-link {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            padding-top: 133.33%; /* 4:3的高宽比 */
+        }
+        .video-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-title {
+            padding: 15px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.4;
+            min-height: 80px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+        .file-note {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: #666;
+        }
+        
+        @media (max-width: 1024px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .video-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .video-card {
+                flex-direction: column;
+            }
+            
+            .video-link {
+                width: 100%;
+                padding-top: 133.33%; /* 保持4:3比例 */
+            }
+            
+            .video-title {
+                width: 100%;
+                padding: 12px;
+                min-height: 60px;
+                font-size: 14px;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            h1 {
+                margin-bottom: 10px;
+                font-size: 20px;
+            }
+            
+            .file-selector {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            select {
+                flex-grow: 1;
+                margin-right: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .video-title {
+                font-size: 13px;
+                min-height: 50px;
+                padding: 10px;
+            }
+            
+            .refresh-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            select {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
-<body style="background-color:  #F2F0E9;">
-    <h1>随机展示tiktok作者的 5 个元素</h1>
-    
-    <div style="margin-top: 20px; font-size: 20px;">
-        <label for="authorSelect">选择爬取的作者</label>            
-        <select id="authorSelect" style="font-size: 20px; color: #333; background-color: #f6f2f2; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-            <!-- 作者选项会动态生成 -->
-        </select>
-    </div>
-    
-    <div style="margin-top: 20px; font-size: 20px;">
-        <label for="subfolderSelect">选择子文件夹</label>            
-        <select id="subfolderSelect" style="font-size: 20px; color: #333; background-color: #f6f2f2; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-            <!-- 子文件夹选项会动态生成 -->
-        </select>
+<body>
+    <div class="container">
+        <header>
+            <h1>抖音视频浏览器</h1>
+            <div class="file-selector">
+                <select id="fileSelect">
+                    <!-- 在这里手动添加文件列表 -->
+                    <option value="stocks/@endtimeinc-Endtime.txt">@endtimeinc-Endtime</option>
+                    <!-- 如果有更多文件，可以手动添加更多选项 -->
+                    <!-- <option value="stocks/其他文件.txt">其他文件</option> -->
+                </select>
+            </div>
+        </header>
+        
+        <div class="file-note" id="fileNote"></div>
+        
+        <div class="video-grid" id="videoGrid">
+            <div class="loading">加载中...</div>
+        </div>
     </div>
 
-    <div id="info" style="margin-top: 20px; font-size: 20px; color: #5007d7;"></div>
-    <div id="output" style="font-size: 40px; color: #333; line-height: 1.5;"></div>
-    
-    <button id="btn" style="font-size: 20px; color: #f6f2f2; background-color: #4caf50; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;width: 100%;">随机刷新</button>
+    <button class="refresh-btn" id="refreshBtn" style="width: 100%;">随机换一批</button>
+
+
 
     <script>
-        const authorSelect = document.getElementById('authorSelect');
-        const subfolderSelect = document.getElementById('subfolderSelect');
-        const infoDiv = document.getElementById('info');
-        const outputDiv = document.getElementById('output');
-        const refreshBtn = document.getElementById('btn');
+        // 所有视频数据
+        let allVideos = [];
+        // 当前文件备注
+        let currentFileNote = '';
         
-        // 作者目录结构
-        authorStructure = {
-            "tiff_in_tech": ["tiff_in_tech_3月.json"],
-            "测试": ["测试.json"]
-        };
-        
-        // 初始化子文件夹下拉菜单
-        function updateSubfolders(authorName) {
-            subfolderSelect.innerHTML = '';
+        // 解析TXT文件内容
+        function parseTxtContent(content) {
+            const lines = content.split('\n').filter(line => line.trim() !== '');
             
-            const subfolders = authorStructure[authorName] || [];
+            // 第一行是备注信息
+            currentFileNote = lines[0];
+            document.getElementById('fileNote').textContent = currentFileNote;
             
-            if (subfolders.length === 0) {
-                const option = document.createElement('option');
-                option.value = "";
-                option.textContent = "无子文件夹";
-                subfolderSelect.appendChild(option);
-                
-                // 清空输出区
-                infoDiv.innerHTML = "该作者没有可用的子文件夹";
-                outputDiv.innerHTML = "";
-                return;
-            }
-            
-            subfolders.forEach(subfolder => {
-                const option = document.createElement('option');
-                option.value = subfolder;
-                option.textContent = subfolder;
-                subfolderSelect.appendChild(option);
-            });
-            
-            
-        }
-        
-        
-        // 随机选择条目
-        function getRandomEntries(entries, count) {
-            if (entries.length <= count) {
-                return entries;
-            }
-            
-            const shuffled = [...entries].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
-        
-        
-        // 初始化作者下拉菜单
-        function initializeAuthorSelect() {
-            authorSelect.innerHTML = '';
-            
-            // 将 authorStructure 中的每个作者添加为选项
-            for (const author in authorStructure) {
-                const option = document.createElement('option');
-                option.value = author;
-                option.textContent = author;
-                authorSelect.appendChild(option);
-            }
-        }
-        
-        // 页面加载时的初始化代码
-        window.addEventListener('DOMContentLoaded', function() {
-            // 初始化作者下拉菜单
-            // initializeAuthorSelect(); 
-            
-            // 添加作者选择变化的事件监听器
-            authorSelect.addEventListener('change', function() {
-                updateSubfolders(this.value);
-            });
-            
-            // 添加子文件夹选择变化的事件监听器
-            subfolderSelect.addEventListener('change', function() {
-                if (this.value) {
-                    loadContent(authorSelect.value, this.value);
-                }
-            });
-            
-            // 如果作者下拉菜单有选项，默认选择第一个
-            if (authorSelect.options.length > 0) {
-                updateSubfolders(authorSelect.options[0].value);
-            }
-            
-            // 刷新按钮事件
-            refreshBtn.addEventListener('click', function() {
-                if (authorSelect.value && subfolderSelect.value) {
-                    loadContent(authorSelect.value, subfolderSelect.value);
+            // 解析视频和图片链接
+            const videos = [];
+            for (let i = 1; i < lines.length; i += 2) {
+                if (i + 1 < lines.length) {
+                    const videoUrl = lines[i].trim();
+                    const imgLine = lines[i + 1].trim();
                     
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'  // 添加平滑滚动效果
-                    }); 
+                    // 提取图片URL和alt文本
+                    const srcMatch = imgLine.match(/src="([^"]+)"/);
+                    // const altMatch = imgLine.match(/alt="([^"]+)"/);
+                    const altMatch = imgLine.match(/创作的([^"]+)/);
+
+                    if (srcMatch && altMatch) {
+                        videos.push({
+                            videoUrl: videoUrl,
+                            imgUrl: srcMatch[1],
+                            title: altMatch[1]
+                        });
+                    }
                 }
+            }
+            
+            return videos;
+        }
+        
+        // 从文件加载数据
+        async function loadDataFromFile(filePath) {
+            document.getElementById('videoGrid').innerHTML = '<div class="loading">加载中...</div>';
+            
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
+                }
+                
+                const text = await response.text();
+                allVideos = parseTxtContent(text);
+                displayRandomVideos();
+                
+            } catch (error) {
+                console.error('加载文件失败:', error);
+                document.getElementById('videoGrid').innerHTML = `
+                    <div class="loading">加载失败，请刷新页面重试</div>
+                `;
+                document.getElementById('fileNote').textContent = '文件加载失败';
+            }
+        }
+        
+        // 显示随机视频
+        function displayRandomVideos() {
+            // 随机选择5个视频
+            const shuffled = [...allVideos].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 5);
+            
+            const videoGrid = document.getElementById('videoGrid');
+            videoGrid.innerHTML = '';
+            
+            selected.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <a href="${video.videoUrl}" class="video-link" target="_blank">
+                        <img src="${video.imgUrl}" alt="${video.title}" class="video-img">
+                    </a>
+                    <div class="video-title" style="font-size: 20px;">${video.title}</div>
+                `;
+                videoGrid.appendChild(videoCard);
+            });
+        }
+        
+        // 页面加载后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileSelect = document.getElementById('fileSelect');
+            
+            // 加载默认选择的文件
+            loadDataFromFile(fileSelect.value);
+            
+            // 文件选择变化时
+            fileSelect.addEventListener('change', (e) => {
+                loadDataFromFile(e.target.value);
+            });
+            
+            // 刷新按钮点击时
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                displayRandomVideos();
+                scrollTo(0, 0);
             });
         });
-
-        // 加载和显示内容
-        async function loadContent(authorName, subfolder) {
-            const fileUrl = `./stocks/${subfolder}`;
-            await loadAndDisplayRandomLines(fileUrl);
-        }
-
-        // 读取JSON文件并随机显示条目
-        async function loadAndDisplayRandomLines(fileUrl) {
-            try {
-                // 读取JSON文件
-                const response = await fetch(fileUrl);
-                const data = await response.json();
-
-                // 将JSON对象转换为数组，但排除_comment字段
-                const entries = Object.entries(data).filter(([key]) => key !== "_comment");
-
-                // 显示_comment内容在infoDiv中
-                if (data._comment) {
-                    infoDiv.innerHTML = data._comment;
-                } else {
-                    infoDiv.innerHTML = '没有找到注释信息';
-                }
-
-                // 检查是否有有效条目
-                if (entries.length === 0) {
-                    outputDiv.innerHTML = "没有找到有效的数据条目";
-                    return;
-                }
-
-                // 随机选取5个条目
-                const randomEntries = getRandomElements(entries, 5);
-
-                // 创建链接并显示
-                outputDiv.innerHTML = randomEntries.map(([url, info]) => {
-                    const pubTime = info.pub_time || '未知日期';
-                    const desc = info.desc || '无描述';
-                    
-                    return `<div class="entry">
-                        <p>
-                        <a class="left" href="${url}" target="_blank">${pubTime}</a>
-                        <a class="right"  href="${url}" target="_blank">${pubTime}</a>
-                        <br>
-                        ${desc}
-                        </p>
-                    </div>`;
-                }).join('<br>');
-            } catch (error) {
-                console.error('读取JSON文件失败:', error);
-                outputDiv.innerHTML = '读取数据失败，请检查文件路径';
-                infoDiv.innerHTML = '无法加载文件信息';
-            }
-        }
-
-        // 随机选取元素的函数
-        function getRandomElements(array, count) {
-            if (array.length <= count) {
-                return array;
-            }
-            const shuffled = [...array].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
-
-        // 初始化作者下拉菜单和事件监听
-        function initUI() {
-            // 填充作者下拉菜单
-            for (const author in authorStructure) {
-                const option = document.createElement('option');
-                option.value = author;
-                option.textContent = author;
-                authorSelect.appendChild(option);
-            }
-            
-            // 设置事件监听
-            authorSelect.addEventListener('change', function() {
-                const selectedAuthor = this.value;
-                updateSubfolders(selectedAuthor);
-            });
-            
-            subfolderSelect.addEventListener('change', function() {
-                const selectedAuthor = authorSelect.value;
-                const selectedSubfolder = this.value;
-                if (selectedSubfolder) {
-                    loadContent(selectedAuthor, selectedSubfolder);
-                }
-            });
-            
-            refreshBtn.addEventListener('click', function() {
-                const selectedAuthor = authorSelect.value;
-                const selectedSubfolder = subfolderSelect.value;
-                if (selectedSubfolder) {
-                    loadContent(selectedAuthor, selectedSubfolder);
-                }
-            });
-            
-            // 初始加载第一个作者
-            if (Object.keys(authorStructure).length > 0) {
-                const firstAuthor = Object.keys(authorStructure)[0];
-                authorSelect.value = firstAuthor;
-                updateSubfolders(firstAuthor);
-            }
-        }
-
-        // 页面加载时初始化UI
-        window.onload = initUI;
     </script>
 </body>
 </html>

@@ -1,139 +1,70 @@
-from DrissionPage import ChromiumPage, ChromiumOptions
+from DrissionPage import ChromiumPage
 import time
-import traceback
-
-
-# 创建配置对象
-options = ChromiumOptions()
-# options.set_argument('--headless=new')  # 使用新的无头模式
-# options.set_argument('--no-sandbox')    # 在Linux系统中添加此参数
-# options.set_argument('--disable-dev-shm-usage')  # 避免内存不足问题
-
-options.set_argument('--user-data-dir=./chrome_data')
-
-
-# 使用配置创建页面对象
-page = ChromiumPage(options)
-# print("已启动无头浏览器...")
-
-
-url = "https://www.tiktok.com/@tiffintech"
-
-
-# 测试用的
-# url = "https://www.tiktok.com/@user2634097387375"   
+import json
 
 
 
-def scroll_page():
-    try:
-        # 使用 JavaScript 获取页面高度
-        last_height = page.run_js('return document.documentElement.scrollHeight')
-        time.sleep(1)  # 等待新内容加载
-        page.scroll.to_bottom()
-        print("等待1秒并执行了滚动命令")
 
-        # 使用 JavaScript 获取新的页面高度
-        new_height = page.run_js('return document.documentElement.scrollHeight')
-        if last_height == new_height:
-            time.sleep(2)
-            last_height = page.run_js('return document.documentElement.scrollHeight')
-            page.scroll.to_bottom()
-            print("等待了2秒并执行了滚动命令")
-            new_height = page.run_js('return document.documentElement.scrollHeight')
-            if last_height == new_height:
-                time.sleep(3)
-                last_height = page.run_js('return document.documentElement.scrollHeight')
-                page.scroll.to_bottom()
-                print("等待了3秒并执行了滚动命令")
-                new_height = page.run_js('return document.documentElement.scrollHeight')
-                if last_height == new_height:
-                    time.sleep(4)
-                    last_height = page.run_js('return document.documentElement.scrollHeight')
-                    page.scroll.to_bottom()
-                    new_height = page.run_js('return document.documentElement.scrollHeight')
-                    if last_height == new_height:
-                        time.sleep(5)
-                        last_height = page.run_js('return document.documentElement.scrollHeight')
-                        page.scroll.to_bottom()
-                        print("等待了5秒并执行了滚动命令")
-                        new_height = page.run_js('return document.documentElement.scrollHeight')
-                        if last_height == new_height:
-                            time.sleep(6)
-                            last_height = page.run_js('return document.documentElement.scrollHeight')
-                            page.scroll.to_bottom()
-                            print("等待了6秒并执行了滚动命令")
-                            new_height = page.run_js('return document.documentElement.scrollHeight')
-                            if last_height == new_height:
-                                print("已到达页面底部，停止滚动。")
-                                return
-                            else:
-                                scroll_page()
-                        else:
-                            scroll_page()
-                    else:
-                        scroll_page()
-                else:
-                    scroll_page()
-            else:
-                scroll_page()
-        else:
-          scroll_page()
- 
-                                        
+start_time = time.time()
+# 直接指定地址创建连接
+page = ChromiumPage(addr_or_opts='127.0.0.1:4000')
+print("已连接到现有浏览器...")
+
+input("按回车键继续...")
 
 
-    except Exception as e:
-        print(f"滚动页面失败: {e}")
-
-
-
+content = ""
 try:
-    page.get(url)
-
-
-    # page.run_js('document.body.style.zoom = "25%"')
-
-
-    # 滚动页面并加载更多内容
-    try:
-        scroll_page()
-
-    except Exception as e:
-        print(f"滚动页面失败: {e}")
-
-
-
-
-
-    # 获得文章和微头条链接块包括标题
-    data = ""
-
-    try:
-        eles = page.eles('xpath://a[contains(@href, "https://www.tiktok.com/@")]')
-        for ele in eles:
-            # 使用attr()方法获取href属性
-            href = ele.attr('href')
-            if href:  # 确保href存在
-                data += href + "\n"
-    except Exception as e:
-        traceback.print_exc()
-
-
-    try:
-        with open('0.txt', 'w', encoding='utf-8') as f:
-            f.write(data)
-    except Exception as e:
-        print(f"保存数据失败: {e}")
+    div_elements = page.eles('xpath://div[contains(@class, "css-1uqux2o-DivItemContainerV2 e19c29qe7")]')
     
+    # 打印找到的元素数量
+    print(f"找到 {len(div_elements)} 个视频元素")
+    
+    for i, element in enumerate(div_elements):
+        try:
+            # 查找 href 以 /video 开头的 <a> 标签
+            # 注意timeout前面不加空格如果报错,就加空格
+            if element.ele('css:a[href^="https://www.tiktok.com/"]', timeout=1):
+                video_link = element.ele('css:a[href^="https://www.tiktok.com/"]', timeout=1)
+                # 获取完整的视频链接
+                video_url = video_link.attr('href')
+                content += video_url + "\n"
+                
+                print(f"{i+1}找到视频链接: {video_url}")
+            else:
+                video_link = element.ele('css:a[href^="https://www.tiktok.com/"]', timeout=1)
+                print(f"{i+1}未找到符合条件的视频链接:video_link:{video_link},element:{element}")
+                continue
+        except Exception as e:
+            print(f"处理元素时出错: {str(e)}")
 
+
+        try:
+            if element.ele('css:img', timeout=1):
+            
+                
+                img = element.ele('css:img', timeout=1)
+                content += img.html.replace("\n", "") + "\n"
+
+            else:
+                img = element.ele('css:img')
+                continue
+                print(f"未找到图片:element:{element}")
+        except Exception as e:
+            print(f"获取图片时出错: {str(e)}")
+
+
+    with open('content.txt', 'w', encoding='utf-8') as f:
+        f.write(content)
+
+
+    end_time = time.time()
+    total_time = (end_time - start_time)/60
+    print(f"爬取完成，用时: {total_time:.2f} 分钟")
 
 except Exception as e:
-    print(f"访问页面失败: {e}")
-
-
-# finally:
-#     page.close()
-
+    print(f"爬取过程中出错: {str(e)}")
+    import traceback
+    traceback.print_exc()
 
 
