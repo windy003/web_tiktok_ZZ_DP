@@ -1,3 +1,9 @@
+# 把正常的chrome作为调试工具:
+# "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=4000
+
+
+
+
 from DrissionPage import ChromiumPage
 import time
 import json
