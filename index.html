@@ -66,11 +66,13 @@
         .video-card {
             background-color: #fff;
             border-radius: 8px;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: transform 0.3s;
             display: flex;
             flex-direction: column;
+            min-height: 700px; /* 增加这行，设置最小高度 */
+
         }
         .video-card:hover {
             transform: translateY(-5px);
@@ -95,8 +97,8 @@
             color: #333;
             font-size: 14px;
             line-height: 1.4;
-            min-height: 80px;
-            overflow: hidden;
+            min-height: 30px;
+            overflow: visible;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -146,7 +148,7 @@
             .video-title {
                 width: 100%;
                 padding: 12px;
-                min-height: 60px;
+                min-height: 30px;
                 font-size: 14px;
             }
             
@@ -174,7 +176,7 @@
         @media (max-width: 480px) {
             .video-title {
                 font-size: 13px;
-                min-height: 50px;
+                min-height: 30px;
                 padding: 10px;
             }
             
