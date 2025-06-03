@@ -302,6 +302,14 @@
             });
         }
         
+        // 从 localStorage 中获取上次选择的作者
+        const lastSelectedAuthor = localStorage.getItem('lastSelectedAuthor');
+        if (lastSelectedAuthor) {
+            fileSelect.value = lastSelectedAuthor;
+        }
+
+
+
         // 页面加载后初始化
         document.addEventListener('DOMContentLoaded', () => {
             const fileSelect = document.getElementById('fileSelect');
@@ -312,6 +320,8 @@
             // 文件选择变化时
             fileSelect.addEventListener('change', (e) => {
                 loadDataFromFile(e.target.value);
+                // 存储当前选择的作者
+                localStorage.setItem('lastSelectedAuthor', e.target.value);
             });
             
             // 刷新按钮点击时
