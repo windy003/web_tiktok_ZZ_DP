@@ -186,8 +186,8 @@
                     <!-- 在这里手动添加文件列表 -->
                     <option value="stocks/@tiffintech.txt">@tiffintech</option>
                     <option value="stocks/@endtimeinc-Endtime.txt">@endtimeinc-Endtime</option>
-                    <option value="stocks/@rickthedev Rick The Dev.txt">@rickthedev Rick The Dev</option>
                     <option value="stocks/Light world@lightworldtiktok.txt">Light world@lightworldtiktok</option>
+                    <option value="stocks/@rickthedev Rick The Dev.txt">@rickthedev Rick The Dev</option>
                 </select>
             </div>
         </header>
@@ -226,9 +226,9 @@
                     
                     // 提取图片URL和alt文本
                     const srcMatch = imgLine.match(/src="([^"]+)"/);
-                    // const altMatch = imgLine.match(/alt="([^"]+)"/);
-                    const altMatch = imgLine.match(/创作的([^"]+)/);
-
+                    console.log(srcMatch); 
+                    const altMatch = imgLine.match(/alt="([^"]+)"/);
+                    console.log(altMatch);
                     if (srcMatch && altMatch) {
                         videos.push({
                             videoUrl: videoUrl,
@@ -238,7 +238,8 @@
                     }
                 }
             }
-            
+            console.log(videos);
+
             return videos;
         }
         
@@ -248,12 +249,15 @@
             
             try {
                 const response = await fetch(filePath);
+                // console.log(response);
                 if (!response.ok) {
                     throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
                 }
                 
                 const text = await response.text();
+                // console.log(text);
                 allVideos = parseTxtContent(text);
+                // console.log(allVideos);
                 displayRandomVideos();
                 
             } catch (error) {
